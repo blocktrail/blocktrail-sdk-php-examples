@@ -126,6 +126,13 @@ if ($eventType == 'address-transactions') {
             echo "Incoming transaction but one of the addresses you're subscribed to is also on the sending (input) side. \n";
         }
 
+        // sort descending by value
+        arsort($sendingAddresses);
+
+        $firstAddress = key($sendingAddresses);
+        $balanceChangeInBtc = BlocktrailSDK::toBTC($sendingAddresses[$firstAddress]);
+        echo "Largest sending address; {$firstAddress} ({$balanceChangeInBtc} BTC) \n";
+
         foreach ($sendingAddresses as $address => $balanceChange) {
             if (!isset($addresses[$address])) {
                 $balanceChangeInBtc = BlocktrailSDK::toBTC($balanceChange);
@@ -141,6 +148,13 @@ if ($eventType == 'address-transactions') {
         if (array_intersect($receivingAddresses, array_keys($addresses))) {
             echo "Outgoing transaction but one of the addresses you're subscribed to is also on the receiving (output) side. \n";
         }
+
+        // sort descending by value
+        arsort($receivingAddresses);
+
+        $firstAddress = key($receivingAddresses);
+        $balanceChangeInBtc = BlocktrailSDK::toBTC($receivingAddresses[$firstAddress]);
+        echo "Largest receiving address; {$firstAddress} ({$balanceChangeInBtc} BTC) \n";
 
         foreach ($receivingAddresses as $address => $balanceChange) {
             if (!isset($addresses[$address])) {
